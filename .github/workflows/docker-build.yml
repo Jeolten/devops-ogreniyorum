@@ -1,0 +1,28 @@
+name: Docker CI Islemleri
+
+#1. TETİKLEYİCİ: Ne zaman çalışsın?
+on:
+ push:
+  branches: [ "main" ]      # Main'e kod gelince çalış.
+
+
+#2. GÖREVLER: Neler yapsın?
+jobs:
+ build-test:
+  runs-on: ubuntu-latest    #Github'ın sanal Ubuntu sunucusunda çalış.
+
+
+  steps:
+  #Bizim kodları o sanal sunucuya çek.
+  - name: Kodu Getir (Checkout)
+    uses: actions/checkout@v3
+
+
+  #Docker imajını build et (Test amaçlı)
+
+  - name: Docker Imajini Build Al
+    run: docker build -t test-imaj .
+
+  #Başarılı olursa;
+  - name: Sonuc
+    run: echo "Tebrikler! Imaj basariyla olustu."

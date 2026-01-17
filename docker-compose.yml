@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  web-uygulamam:           # Servisimizin adı
+    image: benim-sitem     # Kullanacağı imaj (Az önce oluşturduğun)
+    container_name: ozel-sitem-compose
+    ports:
+      - "9090:80"          # Port ayarı (Dış:İç)
+    restart: always        # Çökerse otomatik yeniden başlat
