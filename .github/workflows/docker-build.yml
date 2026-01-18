@@ -1,28 +1,30 @@
-name: Docker CI Islemleri
+name: Docker Build ve Push
 
-#1. TETİKLEYİCİ: Ne zaman çalışsın?
 on:
- push:
-  branches: [ "main" ]      # Main'e kod gelince çalış.
+  push:
+    branches: [ "main" ]
 
-
-#2. GÖREVLER: Neler yapsın?
 jobs:
- build-test:
-  runs-on: ubuntu-latest    #Github'ın sanal Ubuntu sunucusunda çalış.
-
-
-  steps:
-  #Bizim kodları o sanal sunucuya çek.
-  - name: Kodu Getir (Checkout)
-    uses: actions/checkout@v3
-
-
-  #Docker imajını build et (Test amaçlı)
-
-  - name: Docker Imajini Build Al
-    run: docker build -t test-imaj .
-
-  #Başarılı olursa;
-  - name: Sonuc
-    run: echo "Tebrikler! Imaj basariyla olustu."
+  build-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. Kodu Çek
+    - name: Kodu Getir
+      uses: actions/checkout@v3
+      
+    # 2. Docker Hub'a Giris Yap (Sifreleri Secret'tan aliyor)
+    - name: Docker Hub Login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    # 3. İmajı Oluştur ve Gönder
+    - name: Build ve Push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        # Etiket: KullaniciAdin/ImajAdin:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/benim-sitem:latest
